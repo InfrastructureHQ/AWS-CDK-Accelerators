@@ -1,0 +1,1036 @@
+AWSTemplateFormatVersion: "2010-09-09"
+
+Description: ""
+
+Parameters:
+  S3Bucket:
+    Type: String
+    Default: ''
+    Description: S3 BucketName
+
+Resources:
+    ContactsAppFlow:
+        Type: "AWS::AppFlow::Flow"
+        Properties:
+            FlowName: "Contacts"
+            SourceFlowConfig: 
+                ConnectorType: "Salesforce"
+                ConnectorProfileName: "<INSERT_VALUE>"
+                SourceConnectorProperties: 
+                    Salesforce: 
+                        Object: "Contact"
+                        EnableDynamicFieldUpdate: false
+                        IncludeDeletedRecords: true
+            DestinationFlowConfigList: 
+              - 
+                ConnectorType: "S3"
+                DestinationConnectorProperties: 
+                    S3: 
+                        BucketName: !Ref S3Bucket
+                        S3OutputFormatConfig: 
+                            FileType: "CSV"
+                            PrefixConfig: 
+                                PrefixType: "PATH"
+                                PrefixFormat: "DAY"
+                            AggregationConfig: 
+                                AggregationType: "None"
+            TriggerConfig: 
+                TriggerType: "OnDemand"
+                
+            Tasks: 
+              - 
+                SourceFields: 
+                  - "IsDeleted"
+                ConnectorOperator: 
+                    Salesforce: "EQUAL_TO"
+                TaskType: "Filter"
+                TaskProperties: 
+                  - 
+                    Key: "DATA_TYPE"
+                    Value: "boolean"
+                  - 
+                    Key: "VALUE"
+                    Value: "True"
+              - 
+                SourceFields: 
+                  - "Id"
+                  - "IsDeleted"
+                  - "MasterRecordId"
+                  - "AccountId"
+                  - "LastName"
+                  - "FirstName"
+                  - "Salutation"
+                  - "Name"
+                  - "OtherStreet"
+                  - "OtherCity"
+                  - "OtherState"
+                  - "OtherPostalCode"
+                  - "OtherCountry"
+                  - "OtherStateCode"
+                  - "OtherCountryCode"
+                  - "OtherLatitude"
+                  - "OtherLongitude"
+                  - "OtherGeocodeAccuracy"
+                  - "OtherAddress"
+                  - "MailingStreet"
+                  - "MailingCity"
+                  - "MailingState"
+                  - "MailingPostalCode"
+                  - "MailingCountry"
+                  - "MailingStateCode"
+                  - "MailingCountryCode"
+                  - "MailingLatitude"
+                  - "MailingLongitude"
+                  - "MailingGeocodeAccuracy"
+                  - "MailingAddress"
+                  - "Phone"
+                  - "Fax"
+                  - "MobilePhone"
+                  - "HomePhone"
+                  - "OtherPhone"
+                  - "AssistantPhone"
+                  - "ReportsToId"
+                  - "Email"
+                  - "Title"
+                  - "Department"
+                  - "AssistantName"
+                  - "LeadSource"
+                  - "Birthdate"
+                  - "Description"
+                  - "CurrencyIsoCode"
+                  - "OwnerId"
+                  - "HasOptedOutOfEmail"
+                  - "CreatedDate"
+                  - "CreatedById"
+                  - "LastModifiedDate"
+                  - "LastModifiedById"
+                  - "SystemModstamp"
+                  - "LastActivityDate"
+                  - "LastCURequestDate"
+                  - "LastCUUpdateDate"
+                  - "LastViewedDate"
+                  - "LastReferencedDate"
+                  - "EmailBouncedReason"
+                  - "EmailBouncedDate"
+                  - "IsEmailBounced"
+                  - "PhotoUrl"
+                  - "JigsawContactId"
+                  - "IndividualId"
+                  - "ActivityMetricId"
+                  - "ActivityMetricRollupId"
+                ConnectorOperator: 
+                    Salesforce: "PROJECTION"
+                TaskType: "Filter"
+              - 
+                SourceFields: 
+                  - "Id"
+                ConnectorOperator: 
+                    Salesforce: "NO_OP"
+                DestinationField: "Id"
+                TaskType: "Map"
+                TaskProperties: 
+                  - 
+                    Key: "DESTINATION_DATA_TYPE"
+                    Value: "id"
+                  - 
+                    Key: "SOURCE_DATA_TYPE"
+                    Value: "id"
+              - 
+                SourceFields: 
+                  - "IsDeleted"
+                ConnectorOperator: 
+                    Salesforce: "NO_OP"
+                DestinationField: "IsDeleted"
+                TaskType: "Map"
+                TaskProperties: 
+                  - 
+                    Key: "DESTINATION_DATA_TYPE"
+                    Value: "boolean"
+                  - 
+                    Key: "SOURCE_DATA_TYPE"
+                    Value: "boolean"
+              - 
+                SourceFields: 
+                  - "MasterRecordId"
+                ConnectorOperator: 
+                    Salesforce: "NO_OP"
+                DestinationField: "MasterRecordId"
+                TaskType: "Map"
+                TaskProperties: 
+                  - 
+                    Key: "DESTINATION_DATA_TYPE"
+                    Value: "reference"
+                  - 
+                    Key: "SOURCE_DATA_TYPE"
+                    Value: "reference"
+              - 
+                SourceFields: 
+                  - "AccountId"
+                ConnectorOperator: 
+                    Salesforce: "NO_OP"
+                DestinationField: "AccountId"
+                TaskType: "Map"
+                TaskProperties: 
+                  - 
+                    Key: "DESTINATION_DATA_TYPE"
+                    Value: "reference"
+                  - 
+                    Key: "SOURCE_DATA_TYPE"
+                    Value: "reference"
+              - 
+                SourceFields: 
+                  - "LastName"
+                ConnectorOperator: 
+                    Salesforce: "NO_OP"
+                DestinationField: "LastName"
+                TaskType: "Map"
+                TaskProperties: 
+                  - 
+                    Key: "DESTINATION_DATA_TYPE"
+                    Value: "string"
+                  - 
+                    Key: "SOURCE_DATA_TYPE"
+                    Value: "string"
+              - 
+                SourceFields: 
+                  - "FirstName"
+                ConnectorOperator: 
+                    Salesforce: "NO_OP"
+                DestinationField: "FirstName"
+                TaskType: "Map"
+                TaskProperties: 
+                  - 
+                    Key: "DESTINATION_DATA_TYPE"
+                    Value: "string"
+                  - 
+                    Key: "SOURCE_DATA_TYPE"
+                    Value: "string"
+              - 
+                SourceFields: 
+                  - "Salutation"
+                ConnectorOperator: 
+                    Salesforce: "NO_OP"
+                DestinationField: "Salutation"
+                TaskType: "Map"
+                TaskProperties: 
+                  - 
+                    Key: "DESTINATION_DATA_TYPE"
+                    Value: "picklist"
+                  - 
+                    Key: "SOURCE_DATA_TYPE"
+                    Value: "picklist"
+              - 
+                SourceFields: 
+                  - "Name"
+                ConnectorOperator: 
+                    Salesforce: "NO_OP"
+                DestinationField: "Name"
+                TaskType: "Map"
+                TaskProperties: 
+                  - 
+                    Key: "DESTINATION_DATA_TYPE"
+                    Value: "string"
+                  - 
+                    Key: "SOURCE_DATA_TYPE"
+                    Value: "string"
+              - 
+                SourceFields: 
+                  - "OtherStreet"
+                ConnectorOperator: 
+                    Salesforce: "NO_OP"
+                DestinationField: "OtherStreet"
+                TaskType: "Map"
+                TaskProperties: 
+                  - 
+                    Key: "DESTINATION_DATA_TYPE"
+                    Value: "textarea"
+                  - 
+                    Key: "SOURCE_DATA_TYPE"
+                    Value: "textarea"
+              - 
+                SourceFields: 
+                  - "OtherCity"
+                ConnectorOperator: 
+                    Salesforce: "NO_OP"
+                DestinationField: "OtherCity"
+                TaskType: "Map"
+                TaskProperties: 
+                  - 
+                    Key: "DESTINATION_DATA_TYPE"
+                    Value: "string"
+                  - 
+                    Key: "SOURCE_DATA_TYPE"
+                    Value: "string"
+              - 
+                SourceFields: 
+                  - "OtherState"
+                ConnectorOperator: 
+                    Salesforce: "NO_OP"
+                DestinationField: "OtherState"
+                TaskType: "Map"
+                TaskProperties: 
+                  - 
+                    Key: "DESTINATION_DATA_TYPE"
+                    Value: "string"
+                  - 
+                    Key: "SOURCE_DATA_TYPE"
+                    Value: "string"
+              - 
+                SourceFields: 
+                  - "OtherPostalCode"
+                ConnectorOperator: 
+                    Salesforce: "NO_OP"
+                DestinationField: "OtherPostalCode"
+                TaskType: "Map"
+                TaskProperties: 
+                  - 
+                    Key: "DESTINATION_DATA_TYPE"
+                    Value: "string"
+                  - 
+                    Key: "SOURCE_DATA_TYPE"
+                    Value: "string"
+              - 
+                SourceFields: 
+                  - "OtherCountry"
+                ConnectorOperator: 
+                    Salesforce: "NO_OP"
+                DestinationField: "OtherCountry"
+                TaskType: "Map"
+                TaskProperties: 
+                  - 
+                    Key: "DESTINATION_DATA_TYPE"
+                    Value: "string"
+                  - 
+                    Key: "SOURCE_DATA_TYPE"
+                    Value: "string"
+              - 
+                SourceFields: 
+                  - "OtherStateCode"
+                ConnectorOperator: 
+                    Salesforce: "NO_OP"
+                DestinationField: "OtherStateCode"
+                TaskType: "Map"
+                TaskProperties: 
+                  - 
+                    Key: "DESTINATION_DATA_TYPE"
+                    Value: "picklist"
+                  - 
+                    Key: "SOURCE_DATA_TYPE"
+                    Value: "picklist"
+              - 
+                SourceFields: 
+                  - "OtherCountryCode"
+                ConnectorOperator: 
+                    Salesforce: "NO_OP"
+                DestinationField: "OtherCountryCode"
+                TaskType: "Map"
+                TaskProperties: 
+                  - 
+                    Key: "DESTINATION_DATA_TYPE"
+                    Value: "picklist"
+                  - 
+                    Key: "SOURCE_DATA_TYPE"
+                    Value: "picklist"
+              - 
+                SourceFields: 
+                  - "OtherLatitude"
+                ConnectorOperator: 
+                    Salesforce: "NO_OP"
+                DestinationField: "OtherLatitude"
+                TaskType: "Map"
+                TaskProperties: 
+                  - 
+                    Key: "DESTINATION_DATA_TYPE"
+                    Value: "double"
+                  - 
+                    Key: "SOURCE_DATA_TYPE"
+                    Value: "double"
+              - 
+                SourceFields: 
+                  - "OtherLongitude"
+                ConnectorOperator: 
+                    Salesforce: "NO_OP"
+                DestinationField: "OtherLongitude"
+                TaskType: "Map"
+                TaskProperties: 
+                  - 
+                    Key: "DESTINATION_DATA_TYPE"
+                    Value: "double"
+                  - 
+                    Key: "SOURCE_DATA_TYPE"
+                    Value: "double"
+              - 
+                SourceFields: 
+                  - "OtherGeocodeAccuracy"
+                ConnectorOperator: 
+                    Salesforce: "NO_OP"
+                DestinationField: "OtherGeocodeAccuracy"
+                TaskType: "Map"
+                TaskProperties: 
+                  - 
+                    Key: "DESTINATION_DATA_TYPE"
+                    Value: "picklist"
+                  - 
+                    Key: "SOURCE_DATA_TYPE"
+                    Value: "picklist"
+              - 
+                SourceFields: 
+                  - "OtherAddress"
+                ConnectorOperator: 
+                    Salesforce: "NO_OP"
+                DestinationField: "OtherAddress"
+                TaskType: "Map"
+                TaskProperties: 
+                  - 
+                    Key: "DESTINATION_DATA_TYPE"
+                    Value: "address"
+                  - 
+                    Key: "SOURCE_DATA_TYPE"
+                    Value: "address"
+              - 
+                SourceFields: 
+                  - "MailingStreet"
+                ConnectorOperator: 
+                    Salesforce: "NO_OP"
+                DestinationField: "MailingStreet"
+                TaskType: "Map"
+                TaskProperties: 
+                  - 
+                    Key: "DESTINATION_DATA_TYPE"
+                    Value: "textarea"
+                  - 
+                    Key: "SOURCE_DATA_TYPE"
+                    Value: "textarea"
+              - 
+                SourceFields: 
+                  - "MailingCity"
+                ConnectorOperator: 
+                    Salesforce: "NO_OP"
+                DestinationField: "MailingCity"
+                TaskType: "Map"
+                TaskProperties: 
+                  - 
+                    Key: "DESTINATION_DATA_TYPE"
+                    Value: "string"
+                  - 
+                    Key: "SOURCE_DATA_TYPE"
+                    Value: "string"
+              - 
+                SourceFields: 
+                  - "MailingState"
+                ConnectorOperator: 
+                    Salesforce: "NO_OP"
+                DestinationField: "MailingState"
+                TaskType: "Map"
+                TaskProperties: 
+                  - 
+                    Key: "DESTINATION_DATA_TYPE"
+                    Value: "string"
+                  - 
+                    Key: "SOURCE_DATA_TYPE"
+                    Value: "string"
+              - 
+                SourceFields: 
+                  - "MailingPostalCode"
+                ConnectorOperator: 
+                    Salesforce: "NO_OP"
+                DestinationField: "MailingPostalCode"
+                TaskType: "Map"
+                TaskProperties: 
+                  - 
+                    Key: "DESTINATION_DATA_TYPE"
+                    Value: "string"
+                  - 
+                    Key: "SOURCE_DATA_TYPE"
+                    Value: "string"
+              - 
+                SourceFields: 
+                  - "MailingCountry"
+                ConnectorOperator: 
+                    Salesforce: "NO_OP"
+                DestinationField: "MailingCountry"
+                TaskType: "Map"
+                TaskProperties: 
+                  - 
+                    Key: "DESTINATION_DATA_TYPE"
+                    Value: "string"
+                  - 
+                    Key: "SOURCE_DATA_TYPE"
+                    Value: "string"
+              - 
+                SourceFields: 
+                  - "MailingStateCode"
+                ConnectorOperator: 
+                    Salesforce: "NO_OP"
+                DestinationField: "MailingStateCode"
+                TaskType: "Map"
+                TaskProperties: 
+                  - 
+                    Key: "DESTINATION_DATA_TYPE"
+                    Value: "picklist"
+                  - 
+                    Key: "SOURCE_DATA_TYPE"
+                    Value: "picklist"
+              - 
+                SourceFields: 
+                  - "MailingCountryCode"
+                ConnectorOperator: 
+                    Salesforce: "NO_OP"
+                DestinationField: "MailingCountryCode"
+                TaskType: "Map"
+                TaskProperties: 
+                  - 
+                    Key: "DESTINATION_DATA_TYPE"
+                    Value: "picklist"
+                  - 
+                    Key: "SOURCE_DATA_TYPE"
+                    Value: "picklist"
+              - 
+                SourceFields: 
+                  - "MailingLatitude"
+                ConnectorOperator: 
+                    Salesforce: "NO_OP"
+                DestinationField: "MailingLatitude"
+                TaskType: "Map"
+                TaskProperties: 
+                  - 
+                    Key: "DESTINATION_DATA_TYPE"
+                    Value: "double"
+                  - 
+                    Key: "SOURCE_DATA_TYPE"
+                    Value: "double"
+              - 
+                SourceFields: 
+                  - "MailingLongitude"
+                ConnectorOperator: 
+                    Salesforce: "NO_OP"
+                DestinationField: "MailingLongitude"
+                TaskType: "Map"
+                TaskProperties: 
+                  - 
+                    Key: "DESTINATION_DATA_TYPE"
+                    Value: "double"
+                  - 
+                    Key: "SOURCE_DATA_TYPE"
+                    Value: "double"
+              - 
+                SourceFields: 
+                  - "MailingGeocodeAccuracy"
+                ConnectorOperator: 
+                    Salesforce: "NO_OP"
+                DestinationField: "MailingGeocodeAccuracy"
+                TaskType: "Map"
+                TaskProperties: 
+                  - 
+                    Key: "DESTINATION_DATA_TYPE"
+                    Value: "picklist"
+                  - 
+                    Key: "SOURCE_DATA_TYPE"
+                    Value: "picklist"
+              - 
+                SourceFields: 
+                  - "MailingAddress"
+                ConnectorOperator: 
+                    Salesforce: "NO_OP"
+                DestinationField: "MailingAddress"
+                TaskType: "Map"
+                TaskProperties: 
+                  - 
+                    Key: "DESTINATION_DATA_TYPE"
+                    Value: "address"
+                  - 
+                    Key: "SOURCE_DATA_TYPE"
+                    Value: "address"
+              - 
+                SourceFields: 
+                  - "Phone"
+                ConnectorOperator: 
+                    Salesforce: "NO_OP"
+                DestinationField: "Phone"
+                TaskType: "Map"
+                TaskProperties: 
+                  - 
+                    Key: "DESTINATION_DATA_TYPE"
+                    Value: "phone"
+                  - 
+                    Key: "SOURCE_DATA_TYPE"
+                    Value: "phone"
+              - 
+                SourceFields: 
+                  - "Fax"
+                ConnectorOperator: 
+                    Salesforce: "NO_OP"
+                DestinationField: "Fax"
+                TaskType: "Map"
+                TaskProperties: 
+                  - 
+                    Key: "DESTINATION_DATA_TYPE"
+                    Value: "phone"
+                  - 
+                    Key: "SOURCE_DATA_TYPE"
+                    Value: "phone"
+              - 
+                SourceFields: 
+                  - "MobilePhone"
+                ConnectorOperator: 
+                    Salesforce: "NO_OP"
+                DestinationField: "MobilePhone"
+                TaskType: "Map"
+                TaskProperties: 
+                  - 
+                    Key: "DESTINATION_DATA_TYPE"
+                    Value: "phone"
+                  - 
+                    Key: "SOURCE_DATA_TYPE"
+                    Value: "phone"
+              - 
+                SourceFields: 
+                  - "HomePhone"
+                ConnectorOperator: 
+                    Salesforce: "NO_OP"
+                DestinationField: "HomePhone"
+                TaskType: "Map"
+                TaskProperties: 
+                  - 
+                    Key: "DESTINATION_DATA_TYPE"
+                    Value: "phone"
+                  - 
+                    Key: "SOURCE_DATA_TYPE"
+                    Value: "phone"
+              - 
+                SourceFields: 
+                  - "OtherPhone"
+                ConnectorOperator: 
+                    Salesforce: "NO_OP"
+                DestinationField: "OtherPhone"
+                TaskType: "Map"
+                TaskProperties: 
+                  - 
+                    Key: "DESTINATION_DATA_TYPE"
+                    Value: "phone"
+                  - 
+                    Key: "SOURCE_DATA_TYPE"
+                    Value: "phone"
+              - 
+                SourceFields: 
+                  - "AssistantPhone"
+                ConnectorOperator: 
+                    Salesforce: "NO_OP"
+                DestinationField: "AssistantPhone"
+                TaskType: "Map"
+                TaskProperties: 
+                  - 
+                    Key: "DESTINATION_DATA_TYPE"
+                    Value: "phone"
+                  - 
+                    Key: "SOURCE_DATA_TYPE"
+                    Value: "phone"
+              - 
+                SourceFields: 
+                  - "ReportsToId"
+                ConnectorOperator: 
+                    Salesforce: "NO_OP"
+                DestinationField: "ReportsToId"
+                TaskType: "Map"
+                TaskProperties: 
+                  - 
+                    Key: "DESTINATION_DATA_TYPE"
+                    Value: "reference"
+                  - 
+                    Key: "SOURCE_DATA_TYPE"
+                    Value: "reference"
+              - 
+                SourceFields: 
+                  - "Email"
+                ConnectorOperator: 
+                    Salesforce: "NO_OP"
+                DestinationField: "Email"
+                TaskType: "Map"
+                TaskProperties: 
+                  - 
+                    Key: "DESTINATION_DATA_TYPE"
+                    Value: "email"
+                  - 
+                    Key: "SOURCE_DATA_TYPE"
+                    Value: "email"
+              - 
+                SourceFields: 
+                  - "Title"
+                ConnectorOperator: 
+                    Salesforce: "NO_OP"
+                DestinationField: "Title"
+                TaskType: "Map"
+                TaskProperties: 
+                  - 
+                    Key: "DESTINATION_DATA_TYPE"
+                    Value: "string"
+                  - 
+                    Key: "SOURCE_DATA_TYPE"
+                    Value: "string"
+              - 
+                SourceFields: 
+                  - "Department"
+                ConnectorOperator: 
+                    Salesforce: "NO_OP"
+                DestinationField: "Department"
+                TaskType: "Map"
+                TaskProperties: 
+                  - 
+                    Key: "DESTINATION_DATA_TYPE"
+                    Value: "string"
+                  - 
+                    Key: "SOURCE_DATA_TYPE"
+                    Value: "string"
+              - 
+                SourceFields: 
+                  - "AssistantName"
+                ConnectorOperator: 
+                    Salesforce: "NO_OP"
+                DestinationField: "AssistantName"
+                TaskType: "Map"
+                TaskProperties: 
+                  - 
+                    Key: "DESTINATION_DATA_TYPE"
+                    Value: "string"
+                  - 
+                    Key: "SOURCE_DATA_TYPE"
+                    Value: "string"
+              - 
+                SourceFields: 
+                  - "LeadSource"
+                ConnectorOperator: 
+                    Salesforce: "NO_OP"
+                DestinationField: "LeadSource"
+                TaskType: "Map"
+                TaskProperties: 
+                  - 
+                    Key: "DESTINATION_DATA_TYPE"
+                    Value: "picklist"
+                  - 
+                    Key: "SOURCE_DATA_TYPE"
+                    Value: "picklist"
+              - 
+                SourceFields: 
+                  - "Birthdate"
+                ConnectorOperator: 
+                    Salesforce: "NO_OP"
+                DestinationField: "Birthdate"
+                TaskType: "Map"
+                TaskProperties: 
+                  - 
+                    Key: "DESTINATION_DATA_TYPE"
+                    Value: "date"
+                  - 
+                    Key: "SOURCE_DATA_TYPE"
+                    Value: "date"
+              - 
+                SourceFields: 
+                  - "Description"
+                ConnectorOperator: 
+                    Salesforce: "NO_OP"
+                DestinationField: "Description"
+                TaskType: "Map"
+                TaskProperties: 
+                  - 
+                    Key: "DESTINATION_DATA_TYPE"
+                    Value: "textarea"
+                  - 
+                    Key: "SOURCE_DATA_TYPE"
+                    Value: "textarea"
+              - 
+                SourceFields: 
+                  - "CurrencyIsoCode"
+                ConnectorOperator: 
+                    Salesforce: "NO_OP"
+                DestinationField: "CurrencyIsoCode"
+                TaskType: "Map"
+                TaskProperties: 
+                  - 
+                    Key: "DESTINATION_DATA_TYPE"
+                    Value: "picklist"
+                  - 
+                    Key: "SOURCE_DATA_TYPE"
+                    Value: "picklist"
+              - 
+                SourceFields: 
+                  - "OwnerId"
+                ConnectorOperator: 
+                    Salesforce: "NO_OP"
+                DestinationField: "OwnerId"
+                TaskType: "Map"
+                TaskProperties: 
+                  - 
+                    Key: "DESTINATION_DATA_TYPE"
+                    Value: "reference"
+                  - 
+                    Key: "SOURCE_DATA_TYPE"
+                    Value: "reference"
+              - 
+                SourceFields: 
+                  - "HasOptedOutOfEmail"
+                ConnectorOperator: 
+                    Salesforce: "NO_OP"
+                DestinationField: "HasOptedOutOfEmail"
+                TaskType: "Map"
+                TaskProperties: 
+                  - 
+                    Key: "DESTINATION_DATA_TYPE"
+                    Value: "boolean"
+                  - 
+                    Key: "SOURCE_DATA_TYPE"
+                    Value: "boolean"
+              - 
+                SourceFields: 
+                  - "CreatedDate"
+                ConnectorOperator: 
+                    Salesforce: "NO_OP"
+                DestinationField: "CreatedDate"
+                TaskType: "Map"
+                TaskProperties: 
+                  - 
+                    Key: "DESTINATION_DATA_TYPE"
+                    Value: "datetime"
+                  - 
+                    Key: "SOURCE_DATA_TYPE"
+                    Value: "datetime"
+              - 
+                SourceFields: 
+                  - "CreatedById"
+                ConnectorOperator: 
+                    Salesforce: "NO_OP"
+                DestinationField: "CreatedById"
+                TaskType: "Map"
+                TaskProperties: 
+                  - 
+                    Key: "DESTINATION_DATA_TYPE"
+                    Value: "reference"
+                  - 
+                    Key: "SOURCE_DATA_TYPE"
+                    Value: "reference"
+              - 
+                SourceFields: 
+                  - "LastModifiedDate"
+                ConnectorOperator: 
+                    Salesforce: "NO_OP"
+                DestinationField: "LastModifiedDate"
+                TaskType: "Map"
+                TaskProperties: 
+                  - 
+                    Key: "DESTINATION_DATA_TYPE"
+                    Value: "datetime"
+                  - 
+                    Key: "SOURCE_DATA_TYPE"
+                    Value: "datetime"
+              - 
+                SourceFields: 
+                  - "LastModifiedById"
+                ConnectorOperator: 
+                    Salesforce: "NO_OP"
+                DestinationField: "LastModifiedById"
+                TaskType: "Map"
+                TaskProperties: 
+                  - 
+                    Key: "DESTINATION_DATA_TYPE"
+                    Value: "reference"
+                  - 
+                    Key: "SOURCE_DATA_TYPE"
+                    Value: "reference"
+              - 
+                SourceFields: 
+                  - "SystemModstamp"
+                ConnectorOperator: 
+                    Salesforce: "NO_OP"
+                DestinationField: "SystemModstamp"
+                TaskType: "Map"
+                TaskProperties: 
+                  - 
+                    Key: "DESTINATION_DATA_TYPE"
+                    Value: "datetime"
+                  - 
+                    Key: "SOURCE_DATA_TYPE"
+                    Value: "datetime"
+              - 
+                SourceFields: 
+                  - "LastActivityDate"
+                ConnectorOperator: 
+                    Salesforce: "NO_OP"
+                DestinationField: "LastActivityDate"
+                TaskType: "Map"
+                TaskProperties: 
+                  - 
+                    Key: "DESTINATION_DATA_TYPE"
+                    Value: "date"
+                  - 
+                    Key: "SOURCE_DATA_TYPE"
+                    Value: "date"
+              - 
+                SourceFields: 
+                  - "LastCURequestDate"
+                ConnectorOperator: 
+                    Salesforce: "NO_OP"
+                DestinationField: "LastCURequestDate"
+                TaskType: "Map"
+                TaskProperties: 
+                  - 
+                    Key: "DESTINATION_DATA_TYPE"
+                    Value: "datetime"
+                  - 
+                    Key: "SOURCE_DATA_TYPE"
+                    Value: "datetime"
+              - 
+                SourceFields: 
+                  - "LastCUUpdateDate"
+                ConnectorOperator: 
+                    Salesforce: "NO_OP"
+                DestinationField: "LastCUUpdateDate"
+                TaskType: "Map"
+                TaskProperties: 
+                  - 
+                    Key: "DESTINATION_DATA_TYPE"
+                    Value: "datetime"
+                  - 
+                    Key: "SOURCE_DATA_TYPE"
+                    Value: "datetime"
+              - 
+                SourceFields: 
+                  - "LastViewedDate"
+                ConnectorOperator: 
+                    Salesforce: "NO_OP"
+                DestinationField: "LastViewedDate"
+                TaskType: "Map"
+                TaskProperties: 
+                  - 
+                    Key: "DESTINATION_DATA_TYPE"
+                    Value: "datetime"
+                  - 
+                    Key: "SOURCE_DATA_TYPE"
+                    Value: "datetime"
+              - 
+                SourceFields: 
+                  - "LastReferencedDate"
+                ConnectorOperator: 
+                    Salesforce: "NO_OP"
+                DestinationField: "LastReferencedDate"
+                TaskType: "Map"
+                TaskProperties: 
+                  - 
+                    Key: "DESTINATION_DATA_TYPE"
+                    Value: "datetime"
+                  - 
+                    Key: "SOURCE_DATA_TYPE"
+                    Value: "datetime"
+              - 
+                SourceFields: 
+                  - "EmailBouncedReason"
+                ConnectorOperator: 
+                    Salesforce: "NO_OP"
+                DestinationField: "EmailBouncedReason"
+                TaskType: "Map"
+                TaskProperties: 
+                  - 
+                    Key: "DESTINATION_DATA_TYPE"
+                    Value: "string"
+                  - 
+                    Key: "SOURCE_DATA_TYPE"
+                    Value: "string"
+              - 
+                SourceFields: 
+                  - "EmailBouncedDate"
+                ConnectorOperator: 
+                    Salesforce: "NO_OP"
+                DestinationField: "EmailBouncedDate"
+                TaskType: "Map"
+                TaskProperties: 
+                  - 
+                    Key: "DESTINATION_DATA_TYPE"
+                    Value: "datetime"
+                  - 
+                    Key: "SOURCE_DATA_TYPE"
+                    Value: "datetime"
+              - 
+                SourceFields: 
+                  - "IsEmailBounced"
+                ConnectorOperator: 
+                    Salesforce: "NO_OP"
+                DestinationField: "IsEmailBounced"
+                TaskType: "Map"
+                TaskProperties: 
+                  - 
+                    Key: "DESTINATION_DATA_TYPE"
+                    Value: "boolean"
+                  - 
+                    Key: "SOURCE_DATA_TYPE"
+                    Value: "boolean"
+              - 
+                SourceFields: 
+                  - "PhotoUrl"
+                ConnectorOperator: 
+                    Salesforce: "NO_OP"
+                DestinationField: "PhotoUrl"
+                TaskType: "Map"
+                TaskProperties: 
+                  - 
+                    Key: "DESTINATION_DATA_TYPE"
+                    Value: "url"
+                  - 
+                    Key: "SOURCE_DATA_TYPE"
+                    Value: "url"
+              - 
+                SourceFields: 
+                  - "JigsawContactId"
+                ConnectorOperator: 
+                    Salesforce: "NO_OP"
+                DestinationField: "JigsawContactId"
+                TaskType: "Map"
+                TaskProperties: 
+                  - 
+                    Key: "DESTINATION_DATA_TYPE"
+                    Value: "string"
+                  - 
+                    Key: "SOURCE_DATA_TYPE"
+                    Value: "string"
+              - 
+                SourceFields: 
+                  - "IndividualId"
+                ConnectorOperator: 
+                    Salesforce: "NO_OP"
+                DestinationField: "IndividualId"
+                TaskType: "Map"
+                TaskProperties: 
+                  - 
+                    Key: "DESTINATION_DATA_TYPE"
+                    Value: "reference"
+                  - 
+                    Key: "SOURCE_DATA_TYPE"
+                    Value: "reference"
+              - 
+                SourceFields: 
+                  - "ActivityMetricId"
+                ConnectorOperator: 
+                    Salesforce: "NO_OP"
+                DestinationField: "ActivityMetricId"
+                TaskType: "Map"
+                TaskProperties: 
+                  - 
+                    Key: "DESTINATION_DATA_TYPE"
+                    Value: "reference"
+                  - 
+                    Key: "SOURCE_DATA_TYPE"
+                    Value: "reference"
+              - 
+                SourceFields: 
+                  - "ActivityMetricRollupId"
+                ConnectorOperator: 
+                    Salesforce: "NO_OP"
+                DestinationField: "ActivityMetricRollupId"
+                TaskType: "Map"
+                TaskProperties: 
+                  - 
+                    Key: "DESTINATION_DATA_TYPE"
+                    Value: "reference"
+                  - 
+                    Key: "SOURCE_DATA_TYPE"
+                    Value: "reference"
+              - 
+                
+

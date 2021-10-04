@@ -1,0 +1,466 @@
+AWSTemplateFormatVersion: "2010-09-09"
+
+Description: ""
+
+Parameters:
+  S3Bucket:
+    Type: String
+    Default: ''
+    Description: S3 BucketName
+
+Resources:
+    ProductsAppFlow:
+        Type: "AWS::AppFlow::Flow"
+        Properties:
+            FlowName: "Products"
+            SourceFlowConfig: 
+                ConnectorType: "Salesforce"
+                ConnectorProfileName: "<INSERT_VALUE>"
+                SourceConnectorProperties: 
+                    Salesforce: 
+                        Object: "Product2"
+                        EnableDynamicFieldUpdate: false
+                        IncludeDeletedRecords: true
+            DestinationFlowConfigList: 
+              - 
+                ConnectorType: "S3"
+                DestinationConnectorProperties: 
+                    S3: 
+                        BucketName: !Ref S3Bucket
+                        S3OutputFormatConfig: 
+                            FileType: "CSV"
+                            PrefixConfig: 
+                                PrefixType: "PATH"
+                                PrefixFormat: "DAY"
+                            AggregationConfig: 
+                                AggregationType: "None"
+            TriggerConfig: 
+                TriggerType: "OnDemand"
+                
+            Tasks: 
+              - 
+                SourceFields: 
+                  - "IsDeleted"
+                ConnectorOperator: 
+                    Salesforce: "EQUAL_TO"
+                TaskType: "Filter"
+                TaskProperties: 
+                  - 
+                    Key: "DATA_TYPE"
+                    Value: "boolean"
+                  - 
+                    Key: "VALUE"
+                    Value: "True"
+              - 
+                SourceFields: 
+                  - "Id"
+                  - "Name"
+                  - "ProductCode"
+                  - "Description"
+                  - "QuantityScheduleType"
+                  - "QuantityInstallmentPeriod"
+                  - "NumberOfQuantityInstallments"
+                  - "RevenueScheduleType"
+                  - "RevenueInstallmentPeriod"
+                  - "NumberOfRevenueInstallments"
+                  - "IsActive"
+                  - "CreatedDate"
+                  - "CreatedById"
+                  - "LastModifiedDate"
+                  - "LastModifiedById"
+                  - "SystemModstamp"
+                  - "Family"
+                  - "CurrencyIsoCode"
+                  - "ExternalDataSourceId"
+                  - "ExternalId"
+                  - "DisplayUrl"
+                  - "QuantityUnitOfMeasure"
+                  - "IsDeleted"
+                  - "IsArchived"
+                  - "LastViewedDate"
+                  - "LastReferencedDate"
+                  - "StockKeepingUnit"
+                ConnectorOperator: 
+                    Salesforce: "PROJECTION"
+                TaskType: "Filter"
+              - 
+                SourceFields: 
+                  - "Id"
+                ConnectorOperator: 
+                    Salesforce: "NO_OP"
+                DestinationField: "Id"
+                TaskType: "Map"
+                TaskProperties: 
+                  - 
+                    Key: "DESTINATION_DATA_TYPE"
+                    Value: "id"
+                  - 
+                    Key: "SOURCE_DATA_TYPE"
+                    Value: "id"
+              - 
+                SourceFields: 
+                  - "Name"
+                ConnectorOperator: 
+                    Salesforce: "NO_OP"
+                DestinationField: "Name"
+                TaskType: "Map"
+                TaskProperties: 
+                  - 
+                    Key: "DESTINATION_DATA_TYPE"
+                    Value: "string"
+                  - 
+                    Key: "SOURCE_DATA_TYPE"
+                    Value: "string"
+              - 
+                SourceFields: 
+                  - "ProductCode"
+                ConnectorOperator: 
+                    Salesforce: "NO_OP"
+                DestinationField: "ProductCode"
+                TaskType: "Map"
+                TaskProperties: 
+                  - 
+                    Key: "DESTINATION_DATA_TYPE"
+                    Value: "string"
+                  - 
+                    Key: "SOURCE_DATA_TYPE"
+                    Value: "string"
+              - 
+                SourceFields: 
+                  - "Description"
+                ConnectorOperator: 
+                    Salesforce: "NO_OP"
+                DestinationField: "Description"
+                TaskType: "Map"
+                TaskProperties: 
+                  - 
+                    Key: "DESTINATION_DATA_TYPE"
+                    Value: "textarea"
+                  - 
+                    Key: "SOURCE_DATA_TYPE"
+                    Value: "textarea"
+              - 
+                SourceFields: 
+                  - "QuantityScheduleType"
+                ConnectorOperator: 
+                    Salesforce: "NO_OP"
+                DestinationField: "QuantityScheduleType"
+                TaskType: "Map"
+                TaskProperties: 
+                  - 
+                    Key: "DESTINATION_DATA_TYPE"
+                    Value: "picklist"
+                  - 
+                    Key: "SOURCE_DATA_TYPE"
+                    Value: "picklist"
+              - 
+                SourceFields: 
+                  - "QuantityInstallmentPeriod"
+                ConnectorOperator: 
+                    Salesforce: "NO_OP"
+                DestinationField: "QuantityInstallmentPeriod"
+                TaskType: "Map"
+                TaskProperties: 
+                  - 
+                    Key: "DESTINATION_DATA_TYPE"
+                    Value: "picklist"
+                  - 
+                    Key: "SOURCE_DATA_TYPE"
+                    Value: "picklist"
+              - 
+                SourceFields: 
+                  - "NumberOfQuantityInstallments"
+                ConnectorOperator: 
+                    Salesforce: "NO_OP"
+                DestinationField: "NumberOfQuantityInstallments"
+                TaskType: "Map"
+                TaskProperties: 
+                  - 
+                    Key: "DESTINATION_DATA_TYPE"
+                    Value: "int"
+                  - 
+                    Key: "SOURCE_DATA_TYPE"
+                    Value: "int"
+              - 
+                SourceFields: 
+                  - "RevenueScheduleType"
+                ConnectorOperator: 
+                    Salesforce: "NO_OP"
+                DestinationField: "RevenueScheduleType"
+                TaskType: "Map"
+                TaskProperties: 
+                  - 
+                    Key: "DESTINATION_DATA_TYPE"
+                    Value: "picklist"
+                  - 
+                    Key: "SOURCE_DATA_TYPE"
+                    Value: "picklist"
+              - 
+                SourceFields: 
+                  - "RevenueInstallmentPeriod"
+                ConnectorOperator: 
+                    Salesforce: "NO_OP"
+                DestinationField: "RevenueInstallmentPeriod"
+                TaskType: "Map"
+                TaskProperties: 
+                  - 
+                    Key: "DESTINATION_DATA_TYPE"
+                    Value: "picklist"
+                  - 
+                    Key: "SOURCE_DATA_TYPE"
+                    Value: "picklist"
+              - 
+                SourceFields: 
+                  - "NumberOfRevenueInstallments"
+                ConnectorOperator: 
+                    Salesforce: "NO_OP"
+                DestinationField: "NumberOfRevenueInstallments"
+                TaskType: "Map"
+                TaskProperties: 
+                  - 
+                    Key: "DESTINATION_DATA_TYPE"
+                    Value: "int"
+                  - 
+                    Key: "SOURCE_DATA_TYPE"
+                    Value: "int"
+              - 
+                SourceFields: 
+                  - "IsActive"
+                ConnectorOperator: 
+                    Salesforce: "NO_OP"
+                DestinationField: "IsActive"
+                TaskType: "Map"
+                TaskProperties: 
+                  - 
+                    Key: "DESTINATION_DATA_TYPE"
+                    Value: "boolean"
+                  - 
+                    Key: "SOURCE_DATA_TYPE"
+                    Value: "boolean"
+              - 
+                SourceFields: 
+                  - "CreatedDate"
+                ConnectorOperator: 
+                    Salesforce: "NO_OP"
+                DestinationField: "CreatedDate"
+                TaskType: "Map"
+                TaskProperties: 
+                  - 
+                    Key: "DESTINATION_DATA_TYPE"
+                    Value: "datetime"
+                  - 
+                    Key: "SOURCE_DATA_TYPE"
+                    Value: "datetime"
+              - 
+                SourceFields: 
+                  - "CreatedById"
+                ConnectorOperator: 
+                    Salesforce: "NO_OP"
+                DestinationField: "CreatedById"
+                TaskType: "Map"
+                TaskProperties: 
+                  - 
+                    Key: "DESTINATION_DATA_TYPE"
+                    Value: "reference"
+                  - 
+                    Key: "SOURCE_DATA_TYPE"
+                    Value: "reference"
+              - 
+                SourceFields: 
+                  - "LastModifiedDate"
+                ConnectorOperator: 
+                    Salesforce: "NO_OP"
+                DestinationField: "LastModifiedDate"
+                TaskType: "Map"
+                TaskProperties: 
+                  - 
+                    Key: "DESTINATION_DATA_TYPE"
+                    Value: "datetime"
+                  - 
+                    Key: "SOURCE_DATA_TYPE"
+                    Value: "datetime"
+              - 
+                SourceFields: 
+                  - "LastModifiedById"
+                ConnectorOperator: 
+                    Salesforce: "NO_OP"
+                DestinationField: "LastModifiedById"
+                TaskType: "Map"
+                TaskProperties: 
+                  - 
+                    Key: "DESTINATION_DATA_TYPE"
+                    Value: "reference"
+                  - 
+                    Key: "SOURCE_DATA_TYPE"
+                    Value: "reference"
+              - 
+                SourceFields: 
+                  - "SystemModstamp"
+                ConnectorOperator: 
+                    Salesforce: "NO_OP"
+                DestinationField: "SystemModstamp"
+                TaskType: "Map"
+                TaskProperties: 
+                  - 
+                    Key: "DESTINATION_DATA_TYPE"
+                    Value: "datetime"
+                  - 
+                    Key: "SOURCE_DATA_TYPE"
+                    Value: "datetime"
+              - 
+                SourceFields: 
+                  - "Family"
+                ConnectorOperator: 
+                    Salesforce: "NO_OP"
+                DestinationField: "Family"
+                TaskType: "Map"
+                TaskProperties: 
+                  - 
+                    Key: "DESTINATION_DATA_TYPE"
+                    Value: "picklist"
+                  - 
+                    Key: "SOURCE_DATA_TYPE"
+                    Value: "picklist"
+              - 
+                SourceFields: 
+                  - "CurrencyIsoCode"
+                ConnectorOperator: 
+                    Salesforce: "NO_OP"
+                DestinationField: "CurrencyIsoCode"
+                TaskType: "Map"
+                TaskProperties: 
+                  - 
+                    Key: "DESTINATION_DATA_TYPE"
+                    Value: "picklist"
+                  - 
+                    Key: "SOURCE_DATA_TYPE"
+                    Value: "picklist"
+              - 
+                SourceFields: 
+                  - "ExternalDataSourceId"
+                ConnectorOperator: 
+                    Salesforce: "NO_OP"
+                DestinationField: "ExternalDataSourceId"
+                TaskType: "Map"
+                TaskProperties: 
+                  - 
+                    Key: "DESTINATION_DATA_TYPE"
+                    Value: "reference"
+                  - 
+                    Key: "SOURCE_DATA_TYPE"
+                    Value: "reference"
+              - 
+                SourceFields: 
+                  - "ExternalId"
+                ConnectorOperator: 
+                    Salesforce: "NO_OP"
+                DestinationField: "ExternalId"
+                TaskType: "Map"
+                TaskProperties: 
+                  - 
+                    Key: "DESTINATION_DATA_TYPE"
+                    Value: "string"
+                  - 
+                    Key: "SOURCE_DATA_TYPE"
+                    Value: "string"
+              - 
+                SourceFields: 
+                  - "DisplayUrl"
+                ConnectorOperator: 
+                    Salesforce: "NO_OP"
+                DestinationField: "DisplayUrl"
+                TaskType: "Map"
+                TaskProperties: 
+                  - 
+                    Key: "DESTINATION_DATA_TYPE"
+                    Value: "url"
+                  - 
+                    Key: "SOURCE_DATA_TYPE"
+                    Value: "url"
+              - 
+                SourceFields: 
+                  - "QuantityUnitOfMeasure"
+                ConnectorOperator: 
+                    Salesforce: "NO_OP"
+                DestinationField: "QuantityUnitOfMeasure"
+                TaskType: "Map"
+                TaskProperties: 
+                  - 
+                    Key: "DESTINATION_DATA_TYPE"
+                    Value: "picklist"
+                  - 
+                    Key: "SOURCE_DATA_TYPE"
+                    Value: "picklist"
+              - 
+                SourceFields: 
+                  - "IsDeleted"
+                ConnectorOperator: 
+                    Salesforce: "NO_OP"
+                DestinationField: "IsDeleted"
+                TaskType: "Map"
+                TaskProperties: 
+                  - 
+                    Key: "DESTINATION_DATA_TYPE"
+                    Value: "boolean"
+                  - 
+                    Key: "SOURCE_DATA_TYPE"
+                    Value: "boolean"
+              - 
+                SourceFields: 
+                  - "IsArchived"
+                ConnectorOperator: 
+                    Salesforce: "NO_OP"
+                DestinationField: "IsArchived"
+                TaskType: "Map"
+                TaskProperties: 
+                  - 
+                    Key: "DESTINATION_DATA_TYPE"
+                    Value: "boolean"
+                  - 
+                    Key: "SOURCE_DATA_TYPE"
+                    Value: "boolean"
+              - 
+                SourceFields: 
+                  - "LastViewedDate"
+                ConnectorOperator: 
+                    Salesforce: "NO_OP"
+                DestinationField: "LastViewedDate"
+                TaskType: "Map"
+                TaskProperties: 
+                  - 
+                    Key: "DESTINATION_DATA_TYPE"
+                    Value: "datetime"
+                  - 
+                    Key: "SOURCE_DATA_TYPE"
+                    Value: "datetime"
+              - 
+                SourceFields: 
+                  - "LastReferencedDate"
+                ConnectorOperator: 
+                    Salesforce: "NO_OP"
+                DestinationField: "LastReferencedDate"
+                TaskType: "Map"
+                TaskProperties: 
+                  - 
+                    Key: "DESTINATION_DATA_TYPE"
+                    Value: "datetime"
+                  - 
+                    Key: "SOURCE_DATA_TYPE"
+                    Value: "datetime"
+              - 
+                SourceFields: 
+                  - "StockKeepingUnit"
+                ConnectorOperator: 
+                    Salesforce: "NO_OP"
+                DestinationField: "StockKeepingUnit"
+                TaskType: "Map"
+                TaskProperties: 
+                  - 
+                    Key: "DESTINATION_DATA_TYPE"
+                    Value: "string"
+                  - 
+                    Key: "SOURCE_DATA_TYPE"
+                    Value: "string"
+              - 
+                
+
