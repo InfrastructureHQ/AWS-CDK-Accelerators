@@ -279,6 +279,32 @@ class AppFlowStack(cdk.Stack):
             parameters={"S3Bucket": S3_DATA_BUCKET_NAME},
         )
 
+        # AppFlow: Extract Quotes
+        cfn_appflow_Quotes = cloudformation_include.CfnInclude(
+            self,
+            id="{OWNER}-{PRODUCT}-{RESOURCENAME}-{STAGE}".format(
+                OWNER=OWNER,
+                PRODUCT=PRODUCT,
+                RESOURCENAME="Quotes",
+                STAGE=STAGE,
+            ),
+            template_file="stacks/cfn/quotes.yaml",
+            parameters={"S3Bucket": S3_DATA_BUCKET_NAME},
+        )
+
+        # AppFlow: Extract QuoteLineItems
+        cfn_appflow_QuoteLineItems = cloudformation_include.CfnInclude(
+            self,
+            id="{OWNER}-{PRODUCT}-{RESOURCENAME}-{STAGE}".format(
+                OWNER=OWNER,
+                PRODUCT=PRODUCT,
+                RESOURCENAME="QuoteLineItems",
+                STAGE=STAGE,
+            ),
+            template_file="stacks/cfn/quotelineitems.yaml",
+            parameters={"S3Bucket": S3_DATA_BUCKET_NAME},
+        )
+
         
 
         
