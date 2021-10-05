@@ -149,8 +149,8 @@ class AppFlowStack(cdk.Stack):
 
         # AppFlow: Extract - Standard Objects
 
-        # AppFlow: Extract Deleted Accounts
-        cfn_appflow_deleted_Accounts = cloudformation_include.CfnInclude(
+        # AppFlow: Extract Accounts
+        cfn_appflow_Accounts = cloudformation_include.CfnInclude(
             self,
             id="{OWNER}-{PRODUCT}-{RESOURCENAME}-{STAGE}".format(
                 OWNER=OWNER,
@@ -162,8 +162,8 @@ class AppFlowStack(cdk.Stack):
             parameters={"S3Bucket": S3_DATA_BUCKET_NAME},
         )
 
-        # AppFlow: Extract Deleted Contacts
-        cfn_appflow_deleted_Contacts = cloudformation_include.CfnInclude(
+        # AppFlow: Extract Contacts
+        cfn_appflow_Contacts = cloudformation_include.CfnInclude(
             self,
             id="{OWNER}-{PRODUCT}-{RESOURCENAME}-{STAGE}".format(
                 OWNER=OWNER,
@@ -175,8 +175,8 @@ class AppFlowStack(cdk.Stack):
             parameters={"S3Bucket": S3_DATA_BUCKET_NAME},
         )
 
-        # AppFlow: Extract Deleted Leads
-        cfn_appflow_deleted_Leads = cloudformation_include.CfnInclude(
+        # AppFlow: Extract Leads
+        cfn_appflow_Leads = cloudformation_include.CfnInclude(
             self,
             id="{OWNER}-{PRODUCT}-{RESOURCENAME}-{STAGE}".format(
                 OWNER=OWNER, 
@@ -188,8 +188,8 @@ class AppFlowStack(cdk.Stack):
             parameters={"S3Bucket": S3_DATA_BUCKET_NAME},
         )
 
-        # AppFlow: Extract Deleted Opportunities
-        cfn_appflow_deleted_Opportunities = cloudformation_include.CfnInclude(
+        # AppFlow: Extract Opportunities
+        cfn_appflow_Opportunities = cloudformation_include.CfnInclude(
             self,
             id="{OWNER}-{PRODUCT}-{RESOURCENAME}-{STAGE}".format(
                 OWNER=OWNER,
@@ -201,8 +201,8 @@ class AppFlowStack(cdk.Stack):
             parameters={"S3Bucket": S3_DATA_BUCKET_NAME},
         )
 
-        # AppFlow: Extract Deleted OpportunityLineItems
-        cfn_appflow_deleted_OLI = cloudformation_include.CfnInclude(
+        # AppFlow: Extract OpportunityLineItems
+        cfn_appflow_OLI = cloudformation_include.CfnInclude(
             self,
             id="{OWNER}-{PRODUCT}-{RESOURCENAME}-{STAGE}".format(
                 OWNER=OWNER,
@@ -214,8 +214,8 @@ class AppFlowStack(cdk.Stack):
             parameters={"S3Bucket": S3_DATA_BUCKET_NAME},
         )
  
-        # AppFlow: Extract Deleted OrderLineItems
-        cfn_appflow_deleted_OrderLineItems = cloudformation_include.CfnInclude(
+        # AppFlow: Extract OrderLineItems
+        cfn_appflow_OrderLineItems = cloudformation_include.CfnInclude(
             self,
             id="{OWNER}-{PRODUCT}-{RESOURCENAME}-{STAGE}".format(
                 OWNER=OWNER,
@@ -227,8 +227,8 @@ class AppFlowStack(cdk.Stack):
             parameters={"S3Bucket": S3_DATA_BUCKET_NAME},
         )
 
-        # AppFlow: Extract Deleted Orders
-        cfn_appflow_deleted_Orders = cloudformation_include.CfnInclude(
+        # AppFlow: Extract Orders
+        cfn_appflow_Orders = cloudformation_include.CfnInclude(
             self,
             id="{OWNER}-{PRODUCT}-{RESOURCENAME}-{STAGE}".format(
                 OWNER=OWNER, 
@@ -240,8 +240,8 @@ class AppFlowStack(cdk.Stack):
             parameters={"S3Bucket": S3_DATA_BUCKET_NAME},
         )
 
-        # AppFlow: Extract Deleted PricebookEntries
-        cfn_appflow_deleted_PricebookEntries = cloudformation_include.CfnInclude(
+        # AppFlow: Extract PricebookEntries
+        cfn_appflow_PricebookEntries = cloudformation_include.CfnInclude(
             self,
             id="{OWNER}-{PRODUCT}-{RESOURCENAME}-{STAGE}".format(
                 OWNER=OWNER,
@@ -253,8 +253,8 @@ class AppFlowStack(cdk.Stack):
             parameters={"S3Bucket": S3_DATA_BUCKET_NAME},
         )
 
-        # AppFlow: Extract Deleted Pricebook
-        cfn_appflow_deleted_Pricebooks = cloudformation_include.CfnInclude(
+        # AppFlow: Extract Pricebook
+        cfn_appflow_Pricebooks = cloudformation_include.CfnInclude(
             self,
             id="{OWNER}-{PRODUCT}-{RESOURCENAME}-{STAGE}".format(
                 OWNER=OWNER,
@@ -266,8 +266,8 @@ class AppFlowStack(cdk.Stack):
             parameters={"S3Bucket": S3_DATA_BUCKET_NAME},
         )
 
-        # AppFlow: Extract Deleted Products
-        cfn_appflow_deleted_Products = cloudformation_include.CfnInclude(
+        # AppFlow: Extract Products
+        cfn_appflow_Products = cloudformation_include.CfnInclude(
             self,
             id="{OWNER}-{PRODUCT}-{RESOURCENAME}-{STAGE}".format(
                 OWNER=OWNER,
